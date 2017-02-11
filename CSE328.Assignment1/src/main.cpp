@@ -1,6 +1,6 @@
 #include <iostream>
-#include <GL/glew.h>
 #include "Display/Display.h"
+#include <GL/freeglut.h>
 
 int main(int argc, char** argv)
 {
