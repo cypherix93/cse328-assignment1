@@ -8,9 +8,7 @@ int main(int argc, char** argv)
 
     while(!display.IsClosed())
     {
-        glClearColor(0.0f, 0.0f, 0.15f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
+        display.Clear(0.0f, 0.0f, 0.15f, 1.0f);
         display.Update();
     }
 

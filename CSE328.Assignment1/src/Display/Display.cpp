@@ -33,19 +33,23 @@ Display::~Display()
     SDL_Quit();
 }
 
+void Display::Clear(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
 void Display::Update()
 {
     SDL_GL_SwapWindow(_Window);
 
     SDL_Event e;
 
-    while(SDL_PollEvent(&e))
+    while (SDL_PollEvent(&e))
     {
         if (e.type == SDL_QUIT)
             _IsClosed = true;
     }
 }
-
 bool Display::IsClosed()
 {
     return _IsClosed;
