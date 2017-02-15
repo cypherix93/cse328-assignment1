@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SDL.h>
+#include <GL/glew.h>
 
 class Display
 {
@@ -8,7 +9,11 @@ class Display
     Display(int width, int height, const std::string& title);
     virtual ~Display();
 
-    void Clear(float r, float g, float b, float a);
+    int Width;
+    int Height;
+    std::string Title;
+
+    void Clear(float r = 0, float g = 0, float b = 0, float a = 1);
     void Update();
     bool IsWindowClosed();
 
@@ -20,9 +25,7 @@ class Display
 
     bool _IsWindowClosed;
 
-    void SetupColors();
-    void SetupGlew();
-    void SetupWindow(const std::string& title, int width, int height);
     void DestroyWindow();
+    void SetupWindow();
 };
 
