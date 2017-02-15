@@ -18,11 +18,6 @@ Display::~Display()
 }
 
 /* Public Methods */
-void Display::Clear(float r, float g, float b, float a)
-{
-    glClearColor(r, g, b, a);
-    glClear(GL_COLOR_BUFFER_BIT);
-}
 void Display::Update()
 {
     SDL_GL_SwapWindow(_Window);
@@ -31,12 +26,17 @@ void Display::Update()
     while (SDL_PollEvent(&e))
     {
         if (e.type == SDL_QUIT)
-            _IsWindowClosed = true;
+            _IsRunning = false;
     }
 }
-bool Display::IsWindowClosed()
+void Display::Clear(float r, float g, float b, float a) const
 {
-    return _IsWindowClosed;
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+bool Display::IsRunning() const
+{
+    return _IsRunning;
 }
 
 /* Private Methods */
@@ -56,7 +56,8 @@ void Display::SetupWindow()
         SDL_Log("SDL Window failed to initialize.");
     }
     _GLContext = SDL_GL_CreateContext(_Window);
-    _IsWindowClosed = false;
+    _Surface = SDL_GetWindowSurface(_Window);
+    _IsRunning = true;
 
     glewExperimental = GL_TRUE;
 
@@ -65,8 +66,9 @@ void Display::SetupWindow()
         SDL_Log("GLEW failed to initialize.");
     }
 }
-void Display::DestroyWindow()
+void Display::DestroyWindow() const
 {
+    SDL_FreeSurface(_Surface);
     SDL_GL_DeleteContext(_GLContext);
-    SDL_DestroyWindow(_Window);    
+    SDL_DestroyWindow(_Window);
 }

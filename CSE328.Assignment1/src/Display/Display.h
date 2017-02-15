@@ -13,19 +13,18 @@ class Display
     int Height;
     std::string Title;
 
-    void Clear(float r = 0, float g = 0, float b = 0, float a = 1);
+    void Clear(float r = 0, float g = 0, float b = 0, float a = 1) const;
     void Update();
-    bool IsWindowClosed();
-
-    protected:
-
+    bool IsRunning() const;
+    
     private:
-    SDL_Window* _Window;
+    SDL_Window* _Window = nullptr;
     SDL_GLContext _GLContext;
+    SDL_Surface* _Surface = nullptr;
 
-    bool _IsWindowClosed;
+    bool _IsRunning;
 
-    void DestroyWindow();
+    void DestroyWindow() const;
     void SetupWindow();
 };
 

@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 {
     Display display(WINDOW_WIDTH, WINDOW_HEIGHT, "Hey there");
 
-    while(!display.IsWindowClosed())
+    while(display.IsRunning())
     {
         display.Clear(0.0f, 0.0f, 0.15f, 1.0f);
         display.Update();
