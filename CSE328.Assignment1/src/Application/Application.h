@@ -12,11 +12,10 @@ class Application
     Application();
     virtual ~Application();
 
+    // Lifecycle Hooks
+    void Setup();
+    void Start();
+
     private:
     WindowManager* _WindowManager;
-
-    // Lifecycle Hooks
-    static void Setup();
-    static void Start();
 };
-
