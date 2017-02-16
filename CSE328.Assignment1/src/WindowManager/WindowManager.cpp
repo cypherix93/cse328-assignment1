@@ -38,17 +38,17 @@ void WindowManager::Start(int fps)
     // Setup Draw Handler
     if (_DrawHandler != nullptr)
     {
-        std::bind(glutDisplayFunc, _DrawHandler);
+        glutDisplayFunc(_DrawHandler);
     }
 
     // Setup Event Handlers
     if (_ResizeHandler != nullptr)
     {
-        std::bind(glutReshapeFunc, _ResizeHandler);
+        glutReshapeFunc(_ResizeHandler);
     }
     if (_KeypressHandler != nullptr)
     {
-        std::bind(glutKeyboardFunc, _KeypressHandler);
+        glutKeyboardFunc(_KeypressHandler);
     }
 
     // Setup Update Handler
@@ -64,12 +64,12 @@ void WindowManager::OnUpdate(void(*callback)(int))
 {
     auto delay = 1000 / _FPS;
 
-    _UpdateHandler = [this, callback, delay](int value)
+    _UpdateHandler = [=](int value)
     {
         callback(value);
 
         glutPostRedisplay();
-        std::bind(glutTimerFunc, delay, _UpdateHandler, 0);
+        glutTimerFunc(delay, _UpdateHandler, 0);
     };
 }
 

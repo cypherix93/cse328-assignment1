@@ -128,7 +128,8 @@ void Application::Setup()
     _WindowManager->OnUpdate([](int value) -> void
     {
         _angle += 1.5f;
-        if (_angle > 360) {
+        if (_angle > 360)
+        {
             _angle -= 360;
         }
     });
