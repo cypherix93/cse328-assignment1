@@ -64,7 +64,7 @@ void WindowManager::OnUpdate(void(*callback)(int))
 {
     auto delay = 1000 / _FPS;
 
-    _UpdateHandler = [callback, delay](int value)
+    _UpdateHandler = [this, callback, delay](int value)
     {
         callback(value);
 

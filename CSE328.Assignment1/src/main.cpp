@@ -119,13 +119,6 @@ void update(int value) {
 
 int main(int argc, char** argv)
 {
-    WindowManager windowManager{};
-
-    // Init GLUT
-    windowManager.Init(argc, argv);
-
-    // Open GLUT Window
-    windowManager.OpenWindow();
 
     //Set handler functions
     glutDisplayFunc(drawScene);
@@ -133,7 +126,7 @@ int main(int argc, char** argv)
     glutReshapeFunc(handleResize);
 
     //Add a timer
-    glutTimerFunc(25, update, 0);
+    update(0);
 
     glutMainLoop();
 }
