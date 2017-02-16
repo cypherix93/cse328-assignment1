@@ -114,7 +114,6 @@ Application::~Application()
 {
 }
 
-
 /* Public Methods*/
 void Application::Setup()
 {
@@ -142,5 +141,6 @@ void Application::Start()
     // Open GLUT Window
     _WindowManager->OpenWindow();
 
-    glutMainLoop();
+    // Start Window Lifecycle
+    _WindowManager->Start();
 }

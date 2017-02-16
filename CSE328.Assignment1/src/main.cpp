@@ -6,8 +6,6 @@
 int main(int argc, char** argv)
 {
     Application app;
-
-    app.Setup();
-
+    
     app.Start();
 }
