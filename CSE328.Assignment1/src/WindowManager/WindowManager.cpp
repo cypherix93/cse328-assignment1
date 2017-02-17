@@ -60,7 +60,12 @@ void WindowManager::OpenWindow(std::string title, int width, int height)
     glEnable(GL_LIGHT0); //Enable light #0
     glEnable(GL_LIGHT1); //Enable light #1
     glEnable(GL_NORMALIZE); //Automatically normalize normals
-                            //glShadeModel(GL_SMOOTH); //Enable smooth shading
+    glShadeModel(GL_SMOOTH); //Enable smooth shading
+    
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (double)width / (double)height, 1.0, 200.0);
 }
 
 void WindowManager::Start(int fps)
