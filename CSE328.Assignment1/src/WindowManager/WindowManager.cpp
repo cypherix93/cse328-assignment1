@@ -63,8 +63,10 @@ void WindowManager::OpenWindow(std::string title, int width, int height)
                             //glShadeModel(GL_SMOOTH); //Enable smooth shading
 }
 
-void WindowManager::Start()
+void WindowManager::Start(int fps)
 {
+    auto delay = 1000 / fps;
+
     while (_IsRunning)
     {
         // Check all events and call handlers
@@ -103,6 +105,9 @@ void WindowManager::Start()
 
         // Swap buffers
         SDL_GL_SwapWindow(_Window);
+
+        // Delay for a bit to have a smooth framerate
+        SDL_Delay(delay);
     }
 }
 

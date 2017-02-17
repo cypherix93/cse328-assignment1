@@ -19,7 +19,7 @@ class WindowManager
     void Init() const;
     void Dispose() const;
     void OpenWindow(std::string title, int width, int height);
-    void Start();
+    void Start(int fps = 60);
 
     // Event Handler Register functions
     void OnUpdateEvent(UpdateHandlerFunc);
