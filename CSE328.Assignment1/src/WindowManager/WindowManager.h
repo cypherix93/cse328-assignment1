@@ -1,11 +1,13 @@
 #pragma once
-#include <GL/glut.h>
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#include <SDL.h>
 #include <functional>
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
-
-#define FPS 60
+typedef std::function<void(void)> DrawHandlerFunc;
+typedef std::function<void(void)> UpdateHandlerFunc;
+typedef std::function<void(SDL_WindowEvent)> WindowHandlerFunc;
+typedef std::function<void(SDL_KeyboardEvent)> KeypressHandlerFunc;
 
 class WindowManager
 {
@@ -14,23 +16,26 @@ class WindowManager
     virtual ~WindowManager();
 
     // Lifecycle functions
-    void Init(int argc, char** argv) const;
-    void OpenWindow() const;
-    void Start(int fps = FPS);
+    void Init() const;
+    void Dispose() const;
+    void OpenWindow(std::string title, int width, int height);
+    void Start();
 
     // Event Handler Register functions
-    void OnUpdate(void(*callback)(int));
-    void OnDraw(void(*callback)(void));
-    void OnResize(void(*callback)(int, int));
-    void OnKeypress(void(*callback)(unsigned char, int, int));
+    void OnUpdateEvent(UpdateHandlerFunc);
+    void OnDrawEvent(DrawHandlerFunc);
+    void OnWindowEvent(WindowHandlerFunc);
+    void OnKeypressEvent(KeypressHandlerFunc);
 
 
     private:
-    int _FPS = FPS;
+    SDL_Window* _Window = nullptr;
+    SDL_GLContext _GLContext;
+    bool _IsRunning;
 
-    std::function<void(int)> _UpdateHandler = nullptr;
-    std::function<void(void)> _DrawHandler = nullptr;
-    std::function<void(int, int)> _ResizeHandler = nullptr;
-    std::function<void(unsigned char, int, int)> _KeypressHandler = nullptr;
+    UpdateHandlerFunc _UpdateEventHandler = nullptr;
+    DrawHandlerFunc _DrawEventHandler = nullptr;
+    WindowHandlerFunc _WindowEventHandler = nullptr;
+    KeypressHandlerFunc _KeypressEventHandler = nullptr;
 };
 

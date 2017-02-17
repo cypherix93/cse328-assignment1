@@ -1,10 +1,13 @@
 #pragma once
 #include <iostream>
-#include <stdlib.h>
-#include <GL/freeglut.h>
 #include "../WindowManager/WindowManager.h"
+#include <SDL.h>
+#include <GL/freeglut.h>
 
 using namespace std;
+
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 
 class Application
 {

@@ -27,6 +27,8 @@
     <ClInclude Include="src\WindowManager\WindowManager.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application\Application.h" />
+    <ClInclude Include="src\Application\Application.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

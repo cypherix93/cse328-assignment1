@@ -4,21 +4,27 @@
 float _angle = -70.0f;
 
 //Called when a key is pressed
-void handleKeypress(unsigned char key, int x, int y)
+void handleKeypress(SDL_KeyboardEvent evt)
 {
-    switch (key) {
-        case 27: //Escape key
+    switch (evt.keysym.sym) {
+        case SDLK_ESCAPE: //Escape key
             exit(0);
     }
 }
 
 //Called when the window is resized
-void handleResize(int w, int h)
+void handleResize(SDL_WindowEvent evt)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
+    if (evt.event == SDL_WINDOWEVENT_RESIZED)
+    {
+        auto w = evt.data1;
+        auto h = evt.data2;
+
+        glViewport(0, 0, w, h);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
+    }
 }
 
 //Draws the 3D scene
@@ -98,8 +104,6 @@ void drawScene()
     glVertex3f(-1.5f, 1.0f, -1.5f);
 
     glEnd();
-
-    glutSwapBuffers();
 }
 
 
@@ -107,25 +111,25 @@ void drawScene()
 Application::Application()
 {
     _WindowManager = new WindowManager();
+    _WindowManager->Init();
 }
 
 /* Destructor */
 Application::~Application()
 {
+    _WindowManager->Dispose();
+    free(_WindowManager);
 }
 
 /* Public Methods*/
 void Application::Setup()
 {
-    // Init GLUT
-    _WindowManager->Init(0, nullptr);
-
     //Set handler functions
-    _WindowManager->OnDraw(drawScene);
-    _WindowManager->OnKeypress(handleKeypress);
-    _WindowManager->OnResize(handleResize);
+    _WindowManager->OnDrawEvent(drawScene);
+    _WindowManager->OnKeypressEvent(handleKeypress);
+    _WindowManager->OnWindowEvent(handleResize);
 
-    _WindowManager->OnUpdate([](int value) -> void
+    _WindowManager->OnUpdateEvent([]()
     {
         _angle += 1.5f;
         if (_angle > 360)
@@ -140,7 +144,7 @@ void Application::Start()
     Setup();
 
     // Open GLUT Window
-    _WindowManager->OpenWindow();
+    _WindowManager->OpenWindow("Hey there!", WINDOW_WIDTH, WINDOW_HEIGHT);
 
     // Start Window Lifecycle
     _WindowManager->Start();

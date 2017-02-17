@@ -11,16 +11,48 @@ WindowManager::~WindowManager()
 }
 
 /* Public Methods */
-void WindowManager::Init(int argc, char** argv) const
+void WindowManager::Init() const
 {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    {
+        SDL_Log("Unable to initialize SDL: %s\n", SDL_GetError());
+    }
+
+    glewExperimental = GL_TRUE;
+
+    if (glewInit() != GLEW_OK)
+    {
+        SDL_Log("GLEW failed to initialize.");
+    }
+
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+
+    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 }
 
-void WindowManager::OpenWindow() const
+void WindowManager::Dispose() const
 {
-    glutCreateWindow("Rotating 3D Cuboid");
+    SDL_GL_DeleteContext(_GLContext);
+    SDL_DestroyWindow(_Window);
+    SDL_Quit();
+}
+
+void WindowManager::OpenWindow(std::string title, int width, int height)
+{
+    auto windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+
+    _Window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, windowFlags);
+
+    if (_Window == nullptr)
+    {
+        SDL_Log("SDL Window failed to initialize.");
+    }
+    _GLContext = SDL_GL_CreateContext(_Window);
+    _IsRunning = true;
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
@@ -31,59 +63,63 @@ void WindowManager::OpenWindow() const
                             //glShadeModel(GL_SMOOTH); //Enable smooth shading
 }
 
-void WindowManager::Start(int fps)
+void WindowManager::Start()
 {
-    _FPS = fps;
-
-    // Setup Draw Handler
-    if (_DrawHandler != nullptr)
+    while (_IsRunning)
     {
-        glutDisplayFunc(_DrawHandler);
-    }
+        // Check all events and call handlers
+        SDL_Event evt;
+        while (SDL_PollEvent(&evt))
+        {
+            if (evt.type == SDL_QUIT)
+            {
+                _IsRunning = false;
+            }
+            else if (evt.type == SDL_KEYDOWN)
+            {
+                if (_KeypressEventHandler != nullptr)
+                {
+                    _KeypressEventHandler(evt.key);
+                }
+            }
+            else if (evt.type == SDL_WINDOWEVENT)
+            {
+                if (_WindowEventHandler != nullptr)
+                {
+                    _WindowEventHandler(evt.window);
+                }
+            }
+        }
+        
+        // Call draw handler
+        if (_DrawEventHandler != nullptr)
+        {
+            _DrawEventHandler();
+        }
+        if (_UpdateEventHandler != nullptr)
+        {
+            _UpdateEventHandler();
+        }
 
-    // Setup Event Handlers
-    if (_ResizeHandler != nullptr)
-    {
-        glutReshapeFunc(_ResizeHandler);
+        // Swap buffers
+        SDL_GL_SwapWindow(_Window);
     }
-    if (_KeypressHandler != nullptr)
-    {
-        glutKeyboardFunc(_KeypressHandler);
-    }
-
-    // Setup Update Handler
-    if (_UpdateHandler != nullptr)
-    {
-        _UpdateHandler(0);
-    }
-
-    glutMainLoop();
 }
 
-void WindowManager::OnUpdate(void(*callback)(int))
+/* Event Handlers */
+void WindowManager::OnUpdateEvent(UpdateHandlerFunc callback)
 {
-    auto delay = 1000 / _FPS;
-
-    _UpdateHandler = [=](int value)
-    {
-        callback(value);
-
-        glutPostRedisplay();
-        glutTimerFunc(delay, _UpdateHandler, 0);
-    };
+    _UpdateEventHandler = callback;
 }
-
-void WindowManager::OnDraw(void(*callback)())
+void WindowManager::OnDrawEvent(DrawHandlerFunc callback)
 {
-    _DrawHandler = callback;
+    _DrawEventHandler = callback;
 }
-
-void WindowManager::OnResize(void(*callback)(int, int))
+void WindowManager::OnWindowEvent(WindowHandlerFunc callback)
 {
-    _ResizeHandler = callback;
+    _WindowEventHandler = callback;
 }
-
-void WindowManager::OnKeypress(void(*callback)(unsigned char key, int x, int y))
+void WindowManager::OnKeypressEvent(KeypressHandlerFunc callback)
 {
-    _KeypressHandler = callback;
+    _KeypressEventHandler = callback;
 }
