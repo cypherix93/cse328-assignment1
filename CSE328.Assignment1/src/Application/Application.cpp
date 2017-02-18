@@ -1,19 +1,50 @@
 #include "Application.h"
 #include "../WindowManager/WindowManager.h"
 
-float _angle = -70.0f;
+static unsigned int _Pixels[WINDOW_WIDTH][WINDOW_HEIGHT][3];
 
-//Called when a key is pressed
-void handleKeypress(SDL_KeyboardEvent evt)
+void InitHandler()
 {
-    switch (evt.keysym.sym) {
-        case SDLK_ESCAPE: //Escape key
-            exit(0);
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, (double)WINDOW_WIDTH, 0, (double)WINDOW_HEIGHT);
+}
+
+void DrawHandler()
+{
+    auto red = (float)(rand() % 100) / 255;
+
+    glClearColor(red, 0.15f, 0.25f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glPointSize(10);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+
+    glBegin(GL_POINTS);
+
+    for (int i = 0; i < 10; i++)
+    {
+        glVertex2i(10 + 5 * i, 110);
     }
+
+    glEnd();
+
+    glFlush();
+}
+
+void UpdateHandler()
+{
+
 }
 
 //Called when the window is resized
-void handleResize(SDL_WindowEvent evt)
+void ResizeHandler(SDL_WindowEvent evt)
 {
     if (evt.event == SDL_WINDOWEVENT_RESIZED)
     {
@@ -21,91 +52,8 @@ void handleResize(SDL_WindowEvent evt)
         auto h = evt.data2;
 
         glViewport(0, 0, w, h);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
     }
 }
-
-//Draws the 3D scene
-void drawScene()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glTranslatef(0.0f, 0.0f, -8.0f);
-
-    //Add ambient light
-    GLfloat ambientColor[] = { 0.2f, 0.2f, 0.2f, 1.0f }; //Color (0.2, 0.2, 0.2)
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-
-    //Add positioned light
-    GLfloat lightColor0[] = { 0.5f, 0.5f, 0.5f, 1.0f }; //Color (0.5, 0.5, 0.5)
-    GLfloat lightPos0[] = { 4.0f, 0.0f, 8.0f, 1.0f }; //Positioned at (4, 0, 8)
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
-
-    //Add directed light
-    GLfloat lightColor1[] = { 0.5f, 0.2f, 0.2f, 1.0f }; //Color (0.5, 0.2, 0.2)
-                                                        //Coming from the direction (-1, 0.5, 0.5)
-    GLfloat lightPos1[] = { -1.0f, 0.5f, 0.5f, 0.0f };
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
-    glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
-
-    glRotatef(_angle, 0.0f, 1.0f, 1.0f);
-    //Set the colour here
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_QUADS);
-
-    //Front
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-1.5f, -1.0f, 1.5f);
-    //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(1.5f, -1.0f, 1.5f);
-    //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(1.5f, 1.0f, 1.5f);
-    //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-1.5f, 1.0f, 1.5f);
-
-    //Right
-    glNormal3f(1.0f, 0.0f, 0.0f);
-    //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(1.5f, -1.0f, -1.5f);
-    //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(1.5f, 1.0f, -1.5f);
-    //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(1.5f, 1.0f, 1.5f);
-    //glNormal3f(1.0f, 0.0f, 1.0f);
-    glVertex3f(1.5f, -1.0f, 1.5f);
-
-    //Back
-    glNormal3f(0.0f, 0.0f, -1.0f);
-    //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-1.5f, -1.0f, -1.5f);
-    //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-1.5f, 1.0f, -1.5f);
-    //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(1.5f, 1.0f, -1.5f);
-    //glNormal3f(1.0f, 0.0f, -1.0f);
-    glVertex3f(1.5f, -1.0f, -1.5f);
-
-    //Left
-    glNormal3f(-1.0f, 0.0f, 0.0f);
-    //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-1.5f, -1.0f, -1.5f);
-    //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-1.5f, -1.0f, 1.5f);
-    //glNormal3f(-1.0f, 0.0f, 1.0f);
-    glVertex3f(-1.5f, 1.0f, 1.5f);
-    //glNormal3f(-1.0f, 0.0f, -1.0f);
-    glVertex3f(-1.5f, 1.0f, -1.5f);
-
-    glEnd();
-}
-
 
 /* Constructor */
 Application::Application()
@@ -125,18 +73,10 @@ Application::~Application()
 void Application::Setup()
 {
     //Set handler functions
-    _WindowManager->OnDrawEvent(drawScene);
-    _WindowManager->OnKeypressEvent(handleKeypress);
-    _WindowManager->OnWindowEvent(handleResize);
+    _WindowManager->OnDrawEvent(DrawHandler);
+    _WindowManager->OnUpdateEvent(UpdateHandler);
 
-    _WindowManager->OnUpdateEvent([]()
-    {
-        _angle += 1.5f;
-        if (_angle > 360)
-        {
-            _angle -= 360;
-        }
-    });
+    _WindowManager->OnWindowEvent(ResizeHandler);
 }
 
 void Application::Start()
