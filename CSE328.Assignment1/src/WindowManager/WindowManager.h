@@ -4,10 +4,12 @@
 #include <SDL.h>
 #include <functional>
 
+typedef std::function<void(void)> InitHandlerFunc;
 typedef std::function<void(void)> DrawHandlerFunc;
 typedef std::function<void(void)> UpdateHandlerFunc;
 typedef std::function<void(SDL_WindowEvent)> WindowHandlerFunc;
-typedef std::function<void(SDL_KeyboardEvent)> KeypressHandlerFunc;
+typedef std::function<void(SDL_MouseButtonEvent)> MouseHandlerFunc;
+typedef std::function<void(SDL_KeyboardEvent)> KeyboardHandlerFunc;
 
 class WindowManager
 {
@@ -22,10 +24,12 @@ class WindowManager
     void Start(int fps = 60);
 
     // Event Handler Register functions
+    void OnInit(InitHandlerFunc);
     void OnUpdateEvent(UpdateHandlerFunc);
     void OnDrawEvent(DrawHandlerFunc);
     void OnWindowEvent(WindowHandlerFunc);
-    void OnKeypressEvent(KeypressHandlerFunc);
+    void OnMouseEvent(MouseHandlerFunc);
+    void OnKeyboardEvent(KeyboardHandlerFunc);
 
 
     private:
@@ -33,9 +37,11 @@ class WindowManager
     SDL_GLContext _GLContext;
     bool _IsRunning;
 
+    InitHandlerFunc _InitHandler = nullptr;
     UpdateHandlerFunc _UpdateEventHandler = nullptr;
     DrawHandlerFunc _DrawEventHandler = nullptr;
     WindowHandlerFunc _WindowEventHandler = nullptr;
-    KeypressHandlerFunc _KeypressEventHandler = nullptr;
+    MouseHandlerFunc _MouseEventHandler = nullptr;
+    KeyboardHandlerFunc _KeypressEventHandler = nullptr;
 };
 

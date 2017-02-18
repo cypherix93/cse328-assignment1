@@ -53,24 +53,16 @@ void WindowManager::OpenWindow(std::string title, int width, int height)
     }
     _GLContext = SDL_GL_CreateContext(_Window);
     _IsRunning = true;
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHTING); //Enable lighting
-    glEnable(GL_LIGHT0); //Enable light #0
-    glEnable(GL_LIGHT1); //Enable light #1
-    glEnable(GL_NORMALIZE); //Automatically normalize normals
-    glShadeModel(GL_SMOOTH); //Enable smooth shading
-    
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0, (double)width / (double)height, 1.0, 200.0);
 }
 
 void WindowManager::Start(int fps)
 {
     auto delay = 1000 / fps;
+
+    if (_InitHandler != nullptr)
+    {
+        _InitHandler();
+    }
 
     while (_IsRunning)
     {
@@ -82,8 +74,19 @@ void WindowManager::Start(int fps)
             {
                 _IsRunning = false;
             }
+            else if (evt.type == SDL_MOUSEBUTTONDOWN)
+            {
+                if (_MouseEventHandler != nullptr)
+                {
+                    _MouseEventHandler(evt.button);
+                }
+            }
             else if (evt.type == SDL_KEYDOWN)
             {
+                if (evt.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    _IsRunning = false;
+                }
                 if (_KeypressEventHandler != nullptr)
                 {
                     _KeypressEventHandler(evt.key);
@@ -97,7 +100,7 @@ void WindowManager::Start(int fps)
                 }
             }
         }
-        
+
         // Call draw handler
         if (_DrawEventHandler != nullptr)
         {
@@ -117,6 +120,10 @@ void WindowManager::Start(int fps)
 }
 
 /* Event Handlers */
+void WindowManager::OnInit(InitHandlerFunc callback)
+{
+    _InitHandler = callback;
+}
 void WindowManager::OnUpdateEvent(UpdateHandlerFunc callback)
 {
     _UpdateEventHandler = callback;
@@ -129,7 +136,11 @@ void WindowManager::OnWindowEvent(WindowHandlerFunc callback)
 {
     _WindowEventHandler = callback;
 }
-void WindowManager::OnKeypressEvent(KeypressHandlerFunc callback)
+void WindowManager::OnMouseEvent(MouseHandlerFunc callback)
+{
+    _MouseEventHandler = callback;
+}
+void WindowManager::OnKeyboardEvent(KeyboardHandlerFunc callback)
 {
     _KeypressEventHandler = callback;
 }
