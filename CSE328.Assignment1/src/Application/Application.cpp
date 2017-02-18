@@ -9,6 +9,8 @@ void InitHandler()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0, (double)WINDOW_WIDTH, 0, (double)WINDOW_HEIGHT);
+
+    glPointSize(2);
 }
 
 void DrawHandler()
@@ -18,13 +20,10 @@ void DrawHandler()
     glClearColor(red, 0.15f, 0.25f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glPointSize(10);
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
+    glColor3f(1.0f, 1.0f, 1.0f);
 
     glBegin(GL_POINTS);
 
@@ -73,6 +72,7 @@ Application::~Application()
 void Application::Setup()
 {
     //Set handler functions
+    _WindowManager->OnInit(InitHandler);
     _WindowManager->OnDrawEvent(DrawHandler);
     _WindowManager->OnUpdateEvent(UpdateHandler);
 
