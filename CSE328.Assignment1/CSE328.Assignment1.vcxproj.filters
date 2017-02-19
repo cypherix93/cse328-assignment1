@@ -19,6 +19,9 @@
     <ClCompile Include="src\Application\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Drawing\Pixel\Pixel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -30,5 +33,6 @@
     <ClInclude Include="src\Application\Application.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Drawing\Pixel\Pixel.h" />
   </ItemGroup>
 </Project>
