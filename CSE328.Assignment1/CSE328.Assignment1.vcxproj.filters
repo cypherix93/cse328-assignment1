@@ -22,6 +22,9 @@
     <ClCompile Include="src\Drawing\Pixel\Pixel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Application\EventHandlers\EventHandlers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -34,5 +37,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="src\Drawing\Pixel\Pixel.h" />
+    <ClInclude Include="src\Application\EventHandlers\EventHandlers.h" />
   </ItemGroup>
 </Project>

@@ -22,9 +22,3 @@ class Application
     private:
     WindowManager* _WindowManager;
 };
-
-void InitHandler();
-void DrawHandler();
-void UpdateHandler();
-void ResizeHandler(SDL_WindowEvent);
-void MouseButtonHandler(SDL_MouseButtonEvent);
