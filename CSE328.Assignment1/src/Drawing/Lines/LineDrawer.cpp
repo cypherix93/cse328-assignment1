@@ -28,6 +28,35 @@ vector<Pixel> Drawing::GetLinePixelsFromVertices(vector<Pixel> vertices)
 
 vector<Pixel> Drawing::GetSingleLinePixels(Pixel v1, Pixel v2)
 {
+    vector<Pixel> result;
+
+    // Special cases
+    // If both pixels are literally the same, do nothing
+    if (v1 == v2)
+    {
+        result.push_back(v1);
+        return result;
+    }
+    // If straight line along X axis
+    if (v1.Y == v2.Y)
+    {
+        for (auto x = v1.X; x < v2.X; x++)
+        {
+            result.push_back(Pixel(x, v1.Y));
+        }
+        return result;
+    }
+    // If straight line along Y axis
+    if (v1.X == v2.X)
+    {
+        for (auto y = v1.Y; y < v2.Y; y++)
+        {
+            result.push_back(Pixel(v1.X, y));
+        }
+        return result;
+    }
+
+    // Mid point algorithm
     // Pick where to start and end
     Pixel* start;
     Pixel* end;
@@ -43,28 +72,40 @@ vector<Pixel> Drawing::GetSingleLinePixels(Pixel v1, Pixel v2)
         end = &v1;
     }
 
-    vector<Pixel> result;
+    auto dx = end->X - start->X;
+    auto dy = end->Y - start->Y;
 
-    auto dx = fabs(end->X - start->X);
-    auto dy = fabs(end->Y - start->Y);
-    auto p = 2 * dy - dx;
-    auto twoDy = 2 * dy, twoDyMinusDx = 2 * (dy - dx);
+    auto dyAbs = fabs(dy);
+    auto p = dyAbs - dx / 2;
+    auto incE = dyAbs;
+    auto incNE = dyAbs - dx;
 
-    auto y = start->Y;
+    auto x = 0;
+    auto y = 0;
 
-    for (auto x = start->X; x < end->X; x++)
+    while (x < dx)
     {
         if (p < 0)
         {
-            p += twoDy;
+            p += incE;
         }
         else
         {
-            y++;
-            p += twoDyMinusDx;
+            if (dy < 0)
+            {
+                y--;
+            }
+            else
+            {
+                y++;
+            }
+
+            p += incNE;
         }
 
-        result.push_back(Pixel(x, y));
+        result.push_back(Pixel(start->X + x, start->Y + y));
+
+        x++;
     }
 
     return result;

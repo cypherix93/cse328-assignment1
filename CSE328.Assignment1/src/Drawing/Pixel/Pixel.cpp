@@ -11,3 +11,13 @@ Pixel::Pixel(int x, int y)
 Pixel::~Pixel()
 {
 }
+
+bool Drawing::operator==(const Pixel left, const Pixel right)
+{
+    return left.X == right.X && left.Y == right.Y;
+}
+
+bool Drawing::operator!=(const Pixel left, const Pixel right)
+{
+    return !(left == right);
+}

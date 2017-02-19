@@ -11,4 +11,7 @@ namespace Drawing
         int X;
         int Y;
     };
+
+    bool operator==(const Pixel left, const Pixel right);
+    bool operator!=(const Pixel left, const Pixel right);
 }
