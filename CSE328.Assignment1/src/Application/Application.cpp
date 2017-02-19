@@ -18,7 +18,6 @@ void Application::Setup()
     //Set handler functions
     _WindowManager->OnInit(InitHandler);
     _WindowManager->OnDrawEvent(DrawHandler);
-    _WindowManager->OnUpdateEvent(UpdateHandler);
 
     _WindowManager->OnKeyboardEvent(KeyboardButtonHandler);
     _WindowManager->OnMouseEvent(MouseButtonHandler);

@@ -9,8 +9,6 @@ void InitHandler()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
-
-    glPointSize(2);
 }
 
 void DrawHandler()
@@ -20,26 +18,32 @@ void DrawHandler()
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
+    
+    // Draw the lines
+    glPointSize(2);
     glColor3f(1.0f, 1.0f, 1.0f);
 
     glBegin(GL_POINTS);
     pixelsToDraw = GetLinePixelsFromVertices(selectedPixels);
-
     for (auto pixel : pixelsToDraw)
     {
         glVertex2i(pixel.X, pixel.Y);
     }
+    glEnd();
 
+    // Draw the selected vertices
+    glPointSize(6);
+    glColor3f(1.0f, 0.0f, 0.0f);
+
+    glBegin(GL_POINTS);
+    for (auto pixel : selectedPixels)
+    {
+        glVertex2i(pixel.X, pixel.Y);
+    }
     glEnd();
 
     pixelsToDraw.clear();
     pixelsToDraw.shrink_to_fit();
-}
-
-void UpdateHandler()
-{
-
 }
 
 // Called when a keyboard key is pressed
@@ -68,6 +72,10 @@ void MouseButtonHandler(SDL_MouseButtonEvent evt)
     }
     if (evt.button == SDL_BUTTON_RIGHT)
     {
+        // Can't create polygon without at least 3 points
+        if (selectedPixels.size() < 3)
+            return;
+
         selectedPixels.push_back(selectedPixels[0]);
 
         isUserSelecting = false;
