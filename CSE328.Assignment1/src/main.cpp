@@ -1,18 +1,13 @@
-#include <iostream>
-#include <GL/glew.h>
-#include "Display/Display.h"
+#ifdef _MSC_VER
+#    pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#endif
+#include "Application/Application.h"
 
 int main(int argc, char** argv)
 {
-    Display display(800, 600, "Hey there");
-
-    while(!display.IsClosed())
-    {
-        glClearColor(0.0f, 0.0f, 0.15f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        display.Update();
-    }
+    Application app;
+    
+    app.Start();
 
     return 0;
 }
