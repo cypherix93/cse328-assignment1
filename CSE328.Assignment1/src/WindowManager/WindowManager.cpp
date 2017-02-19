@@ -45,7 +45,7 @@ void WindowManager::Dispose() const
 
 void WindowManager::OpenWindow(std::string title, int width, int height)
 {
-    auto windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+    auto windowFlags = SDL_WINDOW_OPENGL;
 
     _Window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, windowFlags);
 

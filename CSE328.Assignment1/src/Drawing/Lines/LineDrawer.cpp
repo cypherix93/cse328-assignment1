@@ -1,5 +1,7 @@
 #include "LineDrawer.h"
 
+static vector<Pixel> computeMidPointAlgorithm(int x1, int y1, int x2, int y2);
+
 vector<Pixel> Drawing::GetLinePixelsFromVertices(vector<Pixel> vertices)
 {
     vector<Pixel> result;
@@ -26,64 +28,90 @@ vector<Pixel> Drawing::GetLinePixelsFromVertices(vector<Pixel> vertices)
     return result;
 }
 
-vector<Pixel> Drawing::GetSingleLinePixels(Pixel v1, Pixel v2)
+vector<Pixel> Drawing::GetSingleLinePixels(Pixel start, Pixel end)
 {
     vector<Pixel> result;
-
+    
     // Special cases
     // If both pixels are literally the same, do nothing
-    if (v1 == v2)
+    if (start == end)
     {
-        result.push_back(v1);
+        result.push_back(start);
         return result;
     }
-    // If straight line along X axis
-    if (v1.Y == v2.Y)
-    {
-        for (auto x = v1.X; x < v2.X; x++)
-        {
-            result.push_back(Pixel(x, v1.Y));
-        }
-        return result;
-    }
-    // If straight line along Y axis
-    if (v1.X == v2.X)
-    {
-        for (auto y = v1.Y; y < v2.Y; y++)
-        {
-            result.push_back(Pixel(v1.X, y));
-        }
-        return result;
-    }
+    
+    auto dx = end.X - start.X;
+    auto dy = end.Y - start.Y;
 
-    // Mid point algorithm
-    // Pick where to start and end
-    Pixel* start;
-    Pixel* end;
+    vector<Pixel> linePixels;
 
-    if (v1.X < v2.X)
+    auto addToVector = [&](int x, int y)
     {
-        start = &v1;
-        end = &v2;
+        result.push_back(Pixel(start.X + x, start.Y + y));
+    };
+    
+    if (abs(dy) > abs(dx))
+    {
+        linePixels = computeMidPointAlgorithm(start.Y, start.X, end.Y, end.X);
+        for (auto linePixel : linePixels)
+        {
+            addToVector(linePixel.Y, linePixel.X);
+        }
     }
     else
     {
-        start = &v2;
-        end = &v1;
+        linePixels = computeMidPointAlgorithm(start.X, start.Y, end.X, end.Y);
+        for (auto linePixel : linePixels)
+        {
+            addToVector(linePixel.X, linePixel.Y);
+        }
     }
 
-    auto dx = end->X - start->X;
-    auto dy = end->Y - start->Y;
+    return result;
+}
 
-    auto dyAbs = fabs(dy);
-    auto p = dyAbs - dx / 2;
-    auto incE = dyAbs;
-    auto incNE = dyAbs - dx;
+static vector<Pixel> computeMidPointAlgorithm(int x1, int y1, int x2, int y2)
+{
+    vector<Pixel> result;
 
     auto x = 0;
     auto y = 0;
 
-    while (x < dx)
+    auto dx = x2 - x1;
+    auto dy = y2 - y1;
+
+    auto dxAbs = abs(dx);
+    auto dyAbs = abs(dy);
+
+    auto xInc = (dx > 0) ? 1 : -1;
+    auto yInc = (dy > 0) ? 1 : -1;
+
+    // If straight line along X axis
+    if (dy == 0)
+    {
+        while (abs(x) < dxAbs)
+        {
+            result.push_back(Pixel(x, 0));
+            x += xInc;
+        }
+        return result;
+    }
+    // If straight line along Y axis
+    if (dx == 0)
+    {
+        while (abs(y) < dyAbs)
+        {
+            result.push_back(Pixel(0, y));
+            y += yInc;
+        }
+        return result;
+    }
+
+    auto p = dyAbs - dxAbs / 2;
+    auto incE = dyAbs;
+    auto incNE = dyAbs - dxAbs;
+        
+    while (abs(x) < dxAbs)
     {
         if (p < 0)
         {
@@ -91,22 +119,13 @@ vector<Pixel> Drawing::GetSingleLinePixels(Pixel v1, Pixel v2)
         }
         else
         {
-            if (dy < 0)
-            {
-                y--;
-            }
-            else
-            {
-                y++;
-            }
-
+            y += yInc;
             p += incNE;
         }
-
-        result.push_back(Pixel(start->X + x, start->Y + y));
-
-        x++;
+        result.push_back(Pixel(x, y));
+        x += xInc;
     }
 
     return result;
 }
+

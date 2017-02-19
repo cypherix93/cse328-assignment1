@@ -19,9 +19,7 @@ void Application::Setup()
     _WindowManager->OnInit(InitHandler);
     _WindowManager->OnDrawEvent(DrawHandler);
     _WindowManager->OnUpdateEvent(UpdateHandler);
-
-    _WindowManager->OnWindowEvent(ResizeHandler);
-
+    
     _WindowManager->OnMouseEvent(MouseButtonHandler);
 }
 
@@ -60,6 +58,8 @@ void DrawHandler()
 
     glBegin(GL_POINTS);
 
+    pixelsToDraw.clear();
+    pixelsToDraw.shrink_to_fit();
     pixelsToDraw = GetLinePixelsFromVertices(selectedPixels);
 
     for (auto pixel : pixelsToDraw)
@@ -73,18 +73,6 @@ void DrawHandler()
 void UpdateHandler()
 {
 
-}
-
-//Called when the window is resized
-void ResizeHandler(SDL_WindowEvent evt)
-{
-    if (evt.event == SDL_WINDOWEVENT_RESIZED)
-    {
-        auto w = evt.data1;
-        auto h = evt.data2;
-
-        glViewport(0, 0, w, h);
-    }
 }
 
 //Called when the mouse button is pressed

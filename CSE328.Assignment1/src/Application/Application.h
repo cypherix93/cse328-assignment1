@@ -33,5 +33,4 @@ class Application
 void InitHandler();
 void DrawHandler();
 void UpdateHandler();
-void ResizeHandler(SDL_WindowEvent);
 void MouseButtonHandler(SDL_MouseButtonEvent);
