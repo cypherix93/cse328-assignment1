@@ -1,10 +1,11 @@
 #pragma once
 #include <iostream>
-#include <list>
+#include <vector>
 #include "../WindowManager/WindowManager.h"
 #include <SDL.h>
 #include <GL/freeglut.h>
 #include "../Drawing/Pixel/Pixel.h"
+#include "../Drawing/Lines/LineDrawer.h"
 
 using namespace std;
 using namespace Drawing;
@@ -12,7 +13,8 @@ using namespace Drawing;
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
-static list<Pixel> pixelsToDraw;
+static vector<Pixel> selectedPixels;
+static vector<Pixel> pixelsToDraw;
 
 class Application
 {

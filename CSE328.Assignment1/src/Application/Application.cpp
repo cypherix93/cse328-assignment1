@@ -90,6 +90,8 @@ void MouseButtonHandler(SDL_MouseButtonEvent evt)
 {
     if (evt.button == SDL_BUTTON_LEFT)
     {
-        pixelsToDraw.push_back(Pixel(evt.x, evt.y));
+        selectedPixels.push_back(Pixel(evt.x, evt.y));
+
+        pixelsToDraw = GetLinePixelsFromVertices(selectedPixels);
     }
 }
