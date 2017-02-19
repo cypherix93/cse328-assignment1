@@ -60,6 +60,8 @@ void DrawHandler()
 
     glBegin(GL_POINTS);
 
+    pixelsToDraw = GetLinePixelsFromVertices(selectedPixels);
+
     for (auto pixel : pixelsToDraw)
     {
         glVertex2i(pixel.X, pixel.Y);
@@ -91,7 +93,5 @@ void MouseButtonHandler(SDL_MouseButtonEvent evt)
     if (evt.button == SDL_BUTTON_LEFT)
     {
         selectedPixels.push_back(Pixel(evt.x, evt.y));
-
-        pixelsToDraw = GetLinePixelsFromVertices(selectedPixels);
     }
 }
