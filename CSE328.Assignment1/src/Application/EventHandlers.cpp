@@ -1,5 +1,7 @@
 ﻿#include "Application.h"
 
+bool isUserSelecting = true;
+
 /* Event Handlers*/
 void InitHandler()
 {
@@ -43,8 +45,17 @@ void UpdateHandler()
 //Called when the mouse button is pressed
 void MouseButtonHandler(SDL_MouseButtonEvent evt)
 {
+    if (!isUserSelecting)
+        return;
+
     if (evt.button == SDL_BUTTON_LEFT)
     {
         selectedPixels.push_back(Pixel(evt.x, evt.y));
+    }
+    if (evt.button == SDL_BUTTON_RIGHT)
+    {
+        selectedPixels.push_back(selectedPixels[0]);
+
+        isUserSelecting = false;
     }
 }
