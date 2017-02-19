@@ -35,39 +35,10 @@ vector<Pixel> Drawing::GetSingleLinePixels(Pixel start, Pixel end)
 {
     vector<Pixel> result;
     
-    // Special cases
-    // If both pixels are literally the same, do nothing
-    if (start == end)
+    auto linePixels = computeMidPointAlgorithm(start.X, start.Y, end.X, end.Y);
+    for (auto linePixel : linePixels)
     {
-        result.push_back(start);
-        return result;
-    }
-    
-    auto dx = end.X - start.X;
-    auto dy = end.Y - start.Y;
-
-    vector<Pixel> linePixels;
-
-    auto addToVector = [&](int x, int y)
-    {
-        result.push_back(Pixel(start.X + x, start.Y + y));
-    };
-
-    linePixels = computeMidPointAlgorithm(start.X, start.Y, end.X, end.Y);
-
-    if (abs(dy) > abs(dx))
-    {
-        for (auto linePixel : linePixels)
-        {
-            addToVector(linePixel.Y, linePixel.X);
-        }
-    }
-    else
-    {
-        for (auto linePixel : linePixels)
-        {
-            addToVector(linePixel.X, linePixel.Y);
-        }
+        result.push_back(Pixel(start.X + linePixel.X, start.Y + linePixel.Y));
     }
 
     linePixels.clear();
@@ -79,6 +50,12 @@ vector<Pixel> Drawing::GetSingleLinePixels(Pixel start, Pixel end)
 static vector<Pixel> computeMidPointAlgorithm(int x1, int y1, int x2, int y2)
 {
     vector<Pixel> result;
+
+    // If both pixels are literally the same, do nothing
+    if (x1 == x2 && y1 == y2)
+    {
+        return result;
+    }
 
     auto x = 0;
     auto y = 0;
@@ -92,9 +69,9 @@ static vector<Pixel> computeMidPointAlgorithm(int x1, int y1, int x2, int y2)
     if (dyAbs > dxAbs)
     {
         result = computeMidPointAlgorithm(y1, x1, y2, x2);
-        for (auto res : result)
+        for (auto &res : result)
         {
-//            swap(res.X, res.Y);
+            swap(res.X, res.Y);
         }
         return result;
     }
@@ -102,6 +79,7 @@ static vector<Pixel> computeMidPointAlgorithm(int x1, int y1, int x2, int y2)
     auto xInc = (dx > 0) ? 1 : -1;
     auto yInc = (dy > 0) ? 1 : -1;
 
+    // Special cases
     // If straight line along X axis
     if (dy == 0)
     {
@@ -126,7 +104,7 @@ static vector<Pixel> computeMidPointAlgorithm(int x1, int y1, int x2, int y2)
     auto p = dyAbs - dxAbs / 2;
     auto incE = dyAbs;
     auto incNE = dyAbs - dxAbs;
-        
+
     while (abs(x) < dxAbs)
     {
         if (p < 0)
