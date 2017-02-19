@@ -3,11 +3,13 @@
 /* Constructor */
 WindowManager::WindowManager()
 {
+    Init();
 }
 
 /* Destructor */
 WindowManager::~WindowManager()
 {
+    Dispose();
 }
 
 /* Public Methods */

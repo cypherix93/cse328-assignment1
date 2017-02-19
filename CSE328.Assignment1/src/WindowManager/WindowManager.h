@@ -18,8 +18,6 @@ class WindowManager
     virtual ~WindowManager();
 
     // Lifecycle functions
-    void Init() const;
-    void Dispose() const;
     void OpenWindow(std::string title, int width, int height);
     void Start(int fps = 60);
 
@@ -33,6 +31,9 @@ class WindowManager
 
 
     private:
+    void Init() const;
+    void Dispose() const;
+
     SDL_Window* _Window = nullptr;
     SDL_GLContext _GLContext;
     bool _IsRunning;

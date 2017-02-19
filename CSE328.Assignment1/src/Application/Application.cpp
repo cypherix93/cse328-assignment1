@@ -1,23 +1,63 @@
+#include <list>
 #include "Application.h"
 #include "../WindowManager/WindowManager.h"
+#include "../Drawing/Pixel/Pixel.h"
 
-static unsigned int _Pixels[WINDOW_WIDTH][WINDOW_HEIGHT][3];
+using namespace Drawing;
 
+/* Constructor */
+Application::Application()
+{
+    _WindowManager = new WindowManager();
+}
+
+/* Destructor */
+Application::~Application()
+{
+    free(_WindowManager);
+}
+
+/* Public Methods*/
+void Application::Setup()
+{
+    //Set handler functions
+    _WindowManager->OnInit(InitHandler);
+    _WindowManager->OnDrawEvent(DrawHandler);
+    _WindowManager->OnUpdateEvent(UpdateHandler);
+
+    _WindowManager->OnWindowEvent(ResizeHandler);
+
+    _WindowManager->OnMouseEvent(MouseButtonHandler);
+}
+
+void Application::Start()
+{
+    Setup();
+
+    // Open GLUT Window
+    _WindowManager->OpenWindow("CSE 328 Assignment 1", WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    // Start Window Lifecycle
+    _WindowManager->Start();
+}
+
+
+static list<Pixel> pixelsToDraw;
+
+/* Event Handlers*/
 void InitHandler()
 {
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, (double)WINDOW_WIDTH, 0, (double)WINDOW_HEIGHT);
+    gluOrtho2D(0, (double)WINDOW_WIDTH, (double)WINDOW_HEIGHT, 0);
 
     glPointSize(2);
 }
 
 void DrawHandler()
 {
-    auto red = (float)(rand() % 100) / 255;
-
-    glClearColor(red, 0.15f, 0.25f, 1.0f);
+    glClearColor(0.0f, 0.15f, 0.25f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
@@ -27,14 +67,12 @@ void DrawHandler()
 
     glBegin(GL_POINTS);
 
-    for (int i = 0; i < 10; i++)
+    for (auto pixel : pixelsToDraw)
     {
-        glVertex2i(10 + 5 * i, 110);
+        glVertex2i(pixel.X, pixel.Y);
     }
 
     glEnd();
-
-    glFlush();
 }
 
 void UpdateHandler()
@@ -54,38 +92,11 @@ void ResizeHandler(SDL_WindowEvent evt)
     }
 }
 
-/* Constructor */
-Application::Application()
+//Called when the mouse button is pressed
+void MouseButtonHandler(SDL_MouseButtonEvent evt)
 {
-    _WindowManager = new WindowManager();
-    _WindowManager->Init();
-}
-
-/* Destructor */
-Application::~Application()
-{
-    _WindowManager->Dispose();
-    free(_WindowManager);
-}
-
-/* Public Methods*/
-void Application::Setup()
-{
-    //Set handler functions
-    _WindowManager->OnInit(InitHandler);
-    _WindowManager->OnDrawEvent(DrawHandler);
-    _WindowManager->OnUpdateEvent(UpdateHandler);
-
-    _WindowManager->OnWindowEvent(ResizeHandler);
-}
-
-void Application::Start()
-{
-    Setup();
-
-    // Open GLUT Window
-    _WindowManager->OpenWindow("Hey there!", WINDOW_WIDTH, WINDOW_HEIGHT);
-
-    // Start Window Lifecycle
-    _WindowManager->Start();
+    if (evt.button == SDL_BUTTON_LEFT)
+    {
+        pixelsToDraw.push_back(Pixel(evt.x, evt.y));
+    }
 }
