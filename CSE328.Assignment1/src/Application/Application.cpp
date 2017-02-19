@@ -19,7 +19,8 @@ void Application::Setup()
     _WindowManager->OnInit(InitHandler);
     _WindowManager->OnDrawEvent(DrawHandler);
     _WindowManager->OnUpdateEvent(UpdateHandler);
-    
+
+    _WindowManager->OnKeyboardEvent(KeyboardButtonHandler);
     _WindowManager->OnMouseEvent(MouseButtonHandler);
 }
 

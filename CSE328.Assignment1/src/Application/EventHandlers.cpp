@@ -42,6 +42,20 @@ void UpdateHandler()
 
 }
 
+// Called when a keyboard key is pressed
+void KeyboardButtonHandler(SDL_KeyboardEvent evt)
+{
+    if (evt.keysym.sym == SDLK_F5)
+    {
+        // Reset the app
+        isUserSelecting = true;
+
+        // Empty the previously selected pixels
+        selectedPixels.clear();
+        selectedPixels.shrink_to_fit();
+    }
+}
+
 //Called when the mouse button is pressed
 void MouseButtonHandler(SDL_MouseButtonEvent evt)
 {
