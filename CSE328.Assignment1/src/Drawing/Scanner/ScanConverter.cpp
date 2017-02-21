@@ -11,12 +11,22 @@ vector<Pixel> Drawing::GetScanConvertedPixels(vector<Pixel> linePixels)
     // Loop through the group
     for (auto group : groupedCoords)
     {
+        auto size = group.second.size();
+
         // X values should be sorted already, so let's loop over them in pairs and insert pixels
-        for (auto i = 0; i < group.second.size(); i += 2)
+        for (auto i = 0; i < size - 1; i += 2)
         {
-            auto y = group.first;
             auto startX = group.second[i];
             auto endX = group.second[i + 1];
+
+            // If they are adjacent, we skip this current one
+            if (endX - startX == 1)
+            {
+                i--;
+                continue;
+            }
+
+            auto y = group.first;
 
             for (auto x = startX; x <= endX; x++)
             {

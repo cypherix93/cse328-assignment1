@@ -24,21 +24,26 @@ void DrawHandler()
     glColor3f(1.0f, 1.0f, 1.0f);
 
     glBegin(GL_POINTS);
-    auto pixelsToDraw = GetLinePixelsFromVertices(selectedPixels);
+
+    auto linePixels = GetLinePixelsFromVertices(selectedPixels);
     // Draw the lines
-    for (auto pixel : pixelsToDraw)
+    for (auto pixel : linePixels)
     {
         glVertex2i(pixel.X, pixel.Y);
     }
     // Scan convert the polygon
     if (!isUserSelecting)
     {
-        pixelsToDraw = GetScanConvertedPixels(pixelsToDraw);
-        for (auto pixel : selectedPixels)
+        auto scanConvertedPixels = GetScanConvertedPixels(linePixels);
+        for (auto pixel : scanConvertedPixels)
         {
             glVertex2i(pixel.X, pixel.Y);
         }
+        scanConvertedPixels.clear();
+        scanConvertedPixels.shrink_to_fit();
     }
+    linePixels.clear();
+    linePixels.shrink_to_fit();
 
     glEnd();
 
@@ -52,9 +57,6 @@ void DrawHandler()
         glVertex2i(pixel.X, pixel.Y);
     }
     glEnd();
-
-    pixelsToDraw.clear();
-    pixelsToDraw.shrink_to_fit();
 }
 
 // Called when a keyboard key is pressed
