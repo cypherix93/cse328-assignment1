@@ -20,7 +20,7 @@ void DrawHandler()
     glLoadIdentity();
 
     // Draw the lines
-    glPointSize(1);
+    glPointSize(2);
     glColor3f(1.0f, 1.0f, 1.0f);
 
     glBegin(GL_POINTS);
@@ -33,8 +33,8 @@ void DrawHandler()
     // Scan convert the polygon
     if (!isUserSelecting)
     {
-        auto scanConvertedPixels = GetScanConvertedPixels(pixelsToDraw);
-        for (auto pixel : scanConvertedPixels)
+        pixelsToDraw = GetScanConvertedPixels(pixelsToDraw);
+        for (auto pixel : selectedPixels)
         {
             glVertex2i(pixel.X, pixel.Y);
         }
