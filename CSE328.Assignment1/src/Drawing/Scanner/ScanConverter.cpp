@@ -11,17 +11,15 @@ vector<Pixel> Drawing::GetScanConvertedPixels(vector<Pixel> linePixels)
     // Loop through the group
     for (auto group : groupedCoords)
     {
-        // X values should be sorted already, so let's loop over them in pairs and insert pixels
-        for (auto i = 0; i < group.second.size(); i += 2)
-        {
-            auto y = group.first;
-            auto startX = group.second[i];
-            auto endX = group.second[i + 1];
+        auto vec = group.second;
 
-            for (auto x = startX; x <= endX; x++)
-            {
-                result.push_back(Pixel(x, y));
-            }
+        auto y = group.first;
+        auto startX = *min_element(vec.begin(), vec.end());
+        auto endX = *max_element(vec.begin(), vec.end());
+
+        for (auto x = startX; x <= endX; x++)
+        {
+            result.push_back(Pixel(x, y));
         }
     }
 
@@ -39,7 +37,11 @@ static map<int, vector<int>> SortDrawnPixels(vector<Pixel> pixels)
         // If map already exists, then append the X value to the X list
         if (val != result.end())
         {
-            val->second.push_back(pixel.X);
+            auto vec = val->second;
+
+            // Insert X into the vector if it already doesnt exist
+            if (find(vec.begin(), vec.end(), pixel.X) == vec.end())
+                val->second.push_back(pixel.X);
         }
         else
         {
