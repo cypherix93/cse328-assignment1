@@ -6,6 +6,7 @@
 #include <GL/freeglut.h>
 #include "../Drawing/Pixel/Pixel.h"
 #include "../Drawing/Lines/LineDrawer.h"
+#include "../Drawing/Scanner/ScanConverter.h"
 
 using namespace std;
 using namespace Drawing;
@@ -14,7 +15,6 @@ using namespace Drawing;
 #define WINDOW_HEIGHT 720
 
 static vector<Pixel> selectedPixels;
-static vector<Pixel> pixelsToDraw;
 
 class Application
 {

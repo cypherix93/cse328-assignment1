@@ -18,17 +18,28 @@ void DrawHandler()
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    
+
     // Draw the lines
     glPointSize(2);
     glColor3f(1.0f, 1.0f, 1.0f);
 
     glBegin(GL_POINTS);
-    pixelsToDraw = GetLinePixelsFromVertices(selectedPixels);
+    auto pixelsToDraw = GetLinePixelsFromVertices(selectedPixels);
+    // Draw the lines
     for (auto pixel : pixelsToDraw)
     {
         glVertex2i(pixel.X, pixel.Y);
     }
+    // Scan convert the polygon
+    if (!isUserSelecting)
+    {
+        pixelsToDraw = GetScanConvertedPixels(pixelsToDraw);
+        for (auto pixel : selectedPixels)
+        {
+            glVertex2i(pixel.X, pixel.Y);
+        }
+    }
+
     glEnd();
 
     // Draw the selected vertices
