@@ -1,16 +1,16 @@
 # CSE 328 - Assignment 1
 
-### Author
+## Author
 
-Name: Bik Ghosh
+**Name**: Bik Ghosh
 
-SBID: 108776586
+**SBID**: 108776586
 
-Email: bikramaditya.ghoshdastidar@stonybrook.edu
+**Email**: bikramaditya.ghoshdastidar@stonybrook.edu
 
 ---
 
-### Project Details
+## Project Details
 
 #### Part 1
 
@@ -18,3 +18,19 @@ Email: bikramaditya.ghoshdastidar@stonybrook.edu
 - Use `Right Mouse Button` to close the polygon.
 - After a polygon is fully drawn with the above steps, selection of new vertices _is not_ allowed.
 - Press `F5` to reset the screen and clear any drawn objects, after which point selection is allowed again.
+
+#### Part 3
+
+- The polygon should be scan filled as soon as the `Right Mouse Button` is pressed to create the closed simple polygon.
+
+---
+
+## Tools Used
+
+**OS**: Windows 7 SP1 x64
+
+**IDE**: Visual Studio 2015 Enterprise _Update 3_
+
+**Libraries**: SDL, GLEW (pulled from Nuget)
+
+---
