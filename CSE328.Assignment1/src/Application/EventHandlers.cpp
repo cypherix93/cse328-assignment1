@@ -62,7 +62,7 @@ void DrawHandler()
     // Draw the interacting vertex
     if (interactingVertex != nullptr)
     {
-        glPointSize(8);
+        glPointSize(10);
         glColor3f(0.0f, 1.0f, 0.0f);
 
         glBegin(GL_POINTS);
@@ -99,7 +99,7 @@ void MouseButtonHandler(SDL_MouseButtonEvent evt)
             auto selected = false;
             for (auto &pixel : selectedPixels)
             {
-                if (pixel.X == evt.x && pixel.Y == evt.y)
+                if (pixel.IsNearPoint(evt.x, evt.y, 6))
                 {
                     interactingVertex = &pixel;
                     selected = true;
