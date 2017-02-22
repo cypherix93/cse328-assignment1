@@ -79,6 +79,9 @@ void KeyboardButtonHandler(SDL_KeyboardEvent evt)
         // Reset the app
         isUserSelecting = true;
 
+        // Reset interacting pixel
+        interactingVertex = nullptr;
+        
         // Empty the previously selected pixels
         selectedPixels.clear();
         selectedPixels.shrink_to_fit();
