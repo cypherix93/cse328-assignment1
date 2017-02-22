@@ -1,6 +1,7 @@
 ﻿#include "Application.h"
 
 bool isUserSelecting = true;
+Pixel* interactingVertex = nullptr;
 
 /* Event Handlers*/
 void InitHandler()
@@ -57,6 +58,17 @@ void DrawHandler()
         glVertex2i(pixel.X, pixel.Y);
     }
     glEnd();
+
+    // Draw the interacting vertex
+    if (interactingVertex != nullptr)
+    {
+        glPointSize(10);
+        glColor3f(0.0f, 1.0f, 0.0f);
+
+        glBegin(GL_POINTS);
+        glVertex2i(interactingVertex->X, interactingVertex->Y);
+        glEnd();
+    }
 }
 
 // Called when a keyboard key is pressed
@@ -67,6 +79,9 @@ void KeyboardButtonHandler(SDL_KeyboardEvent evt)
         // Reset the app
         isUserSelecting = true;
 
+        // Reset interacting pixel
+        interactingVertex = nullptr;
+        
         // Empty the previously selected pixels
         selectedPixels.clear();
         selectedPixels.shrink_to_fit();
@@ -76,21 +91,53 @@ void KeyboardButtonHandler(SDL_KeyboardEvent evt)
 //Called when the mouse button is pressed
 void MouseButtonHandler(SDL_MouseButtonEvent evt)
 {
-    if (!isUserSelecting)
-        return;
-
     if (evt.button == SDL_BUTTON_LEFT)
     {
-        selectedPixels.push_back(Pixel(evt.x, evt.y));
+        if (isUserSelecting)
+        {
+            selectedPixels.push_back(Pixel(evt.x, evt.y));
+        }
+        else
+        {
+            auto selected = false;
+            for (auto &pixel : selectedPixels)
+            {
+                if (pixel.IsNearPoint(evt.x, evt.y, 6))
+                {
+                    interactingVertex = &pixel;
+                    selected = true;
+                }
+            }
+
+            // Deselect the selected vertex if left click again
+            if (!selected)
+            {
+                interactingVertex = nullptr;
+            }
+        }
     }
     if (evt.button == SDL_BUTTON_RIGHT)
     {
-        // Can't create polygon without at least 3 points
-        if (selectedPixels.size() < 3)
-            return;
+        if (isUserSelecting)
+        {
+            // Can't create polygon without at least 3 points
+            if (selectedPixels.size() < 3)
+                return;
 
-        selectedPixels.push_back(selectedPixels[0]);
+            selectedPixels.push_back(selectedPixels[0]);
 
-        isUserSelecting = false;
+            isUserSelecting = false;
+        }
+        else if (interactingVertex != nullptr)
+        {
+            for (auto &pixel : selectedPixels)
+            {
+                if (pixel == *interactingVertex)
+                {
+                    pixel.X = evt.x;
+                    pixel.Y = evt.y;
+                }
+            }
+        }
     }
 }
