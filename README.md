@@ -23,6 +23,12 @@
 
 - The polygon should be scan filled as soon as the `Right Mouse Button` is pressed to create the closed simple polygon.
 
+#### Part 4
+
+- Use `Left Mouse Button` to select the red vertices. They should turn green indicating they are selected.
+- Use `Right Mouse Button` to move the selected vertex around. This should redraw the polygon based on the new vertex position.
+- To deselect a vertex, click away from the selected vertex.
+
 ---
 
 ## Tools Used
